@@ -7,6 +7,7 @@ import { extractHulu, matchHulu } from "./Hulu"
 import { extractKanopy, matchKanopy } from "./Kanopy"
 import { extractMax, matchMax } from "./Max"
 import { extractNetflix, matchNetflix } from "./Netflix"
+import { extractOneplay, matchOneplay } from "./Oneplay"
 import { extractParamountPlus, matchParamountPlus } from "./ParamountPlus"
 import { extractPeacock, matchPeacock } from "./Peacock"
 import { extractPlex, matchPlex } from "./Plex"
@@ -31,6 +32,7 @@ const SITE_EXTRACTORS: Array<{
   ) => Promise<MediaContext> | MediaContext
 }> = [
   { match: matchNetflix, extract: extractNetflix },
+  { match: matchOneplay, extract: extractOneplay },
   { match: matchHBOMax, extract: extractHBOMax },
   { match: matchMax, extract: extractMax },
   { match: matchAppleTV, extract: extractAppleTV },
