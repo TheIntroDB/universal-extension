@@ -1,7 +1,7 @@
 {
   "name": "universal-extension",
   "displayName": "TheIntroDB",
-  "version": "1.9.0",
+  "version": "1.9.1",
   "description": "A browser extension that adds skip buttons for intros, recaps, credits, and previews on almost any site!",
   "author": "TheIntroDB",
   "scripts": {
