@@ -1,0 +1,98 @@
+{
+  "popup": {
+    "title": "Odeslat",
+    "segment": "Segment",
+    "time": "Čas (MM:SS nebo HH:MM:SS)",
+    "videoDuration": "Délka videa (MM:SS nebo HH:MM:SS)",
+    "startTime": "Čas začátku",
+    "endTime": "Čas konce",
+    "insertCurrentTime": "Vložit aktuální čas",
+    "submit": "Odeslat",
+    "disconnectToken": "Odpojit token",
+    "disconnectToast": "Token odpojen",
+    "enterApiKey": "Zadejte svůj API klíč",
+    "authorize": "Autorizovat",
+    "yourStatistics": "Vaše statistiky",
+    "personalTimeSaved": "Osobní ušetřený čas",
+    "totalTimeSaved": "Celkový ušetřený čas",
+    "segmentsSkipped": "Přeskočené segmenty",
+    "yourSubmissions": "Vaše příspěvky",
+    "total": "Celkem",
+    "accepted": "Přijato",
+    "pending": "Čekající",
+    "acceptanceRate": "Míra přijetí",
+    "currentStreak": "Aktuální série",
+    "bestStreak": "Nejlepší série",
+    "communitySubmissions": "Příspěvky komunity",
+    "loading": "Načítání...",
+    "enabled": "Zapnuto",
+    "disabled": "Vypnuto",
+    "on": "zapnuto",
+    "github": "Github",
+    "skippingUnavailableMediaFound": "Přeskakování zde není dostupné, ale médium bylo nalezeno a můžete stále ručně odesílat segmenty.",
+    "anonymousUsageReporting": "Anonymní hlášení použití",
+    "anonymousUsageReportingDescription": "Pomáhá vylepšovat rozšíření zasíláním anonymních analytik (žádná osobní data).",
+    "anonymousUsageReportingEnabledToast": "Hlášení použití zapnuto",
+    "anonymousUsageReportingDisabledToast": "Hlášení použití vypnuto"
+  },
+  "content": {
+    "skipButton": {
+      "intro": "Přeskočit úvod",
+      "recap": "Přeskočit shrnutí",
+      "credits": "Přeskočit závěrečné titulky",
+      "preview": "Přeskočit ukázku"
+    }
+  },
+  "errors": {
+    "apiKeyNotAccepted": "API klíč nebyl přijat. Zkontrolujte nebo vygenerujte nový klíč na theintrodb.org",
+    "couldNotLoadAccountStats": "Nepodařilo se načíst statistiky účtu. Zkuste to prosím později.",
+    "rateLimited": "Limit použití dosažen. Zkuste to znovu za {{timeString}}.",
+    "apiUnreachable": "API je nedostupné. Zkuste to prosím později.",
+    "cannotRunOnThisPage": "Na této stránce nelze spustit",
+    "refreshPageToSync": "Obnovte stránku pro synchronizaci",
+    "notAvailableOnThisPage": "Na této stránce není dostupné",
+    "noHtmlVideoPlayerDetected": "Nebyl detekován HTML přehrávač videa"
+  },
+  "segments": {
+    "intro": "Úvod",
+    "recap": "Shrnutí",
+    "credits": "Závěrečné titulky",
+    "preview": "Ukázka"
+  },
+  "time": {
+    "hours": "h",
+    "minutes": "m",
+    "seconds": "s"
+  },
+  "status": {
+    "submitting": "Odesílání...",
+    "submittedSuccessfully": "Úspěšně odesláno",
+    "connectionFailed": "Připojení selhalo"
+  },
+  "media": {
+    "season": "Série",
+    "episode": "Epizoda",
+    "tvSeries": "Seriál",
+    "featureFilm": "Film"
+  },
+  "setup": {
+    "description1": "Získáváte segmenty z TheIntroDB!",
+    "description2": "Volitelně můžete zadat svůj API klíč a odesílat nové segmenty a přeskakovat pomocí vašich stále čekajících segmentů!"
+  },
+  "settings": {
+    "language": "Jazyk",
+    "skipButtonTheme": "Motiv tlačítka přeskakování",
+    "skipButtonThemeDescription": "Změňte barevné schéma tlačítka přeskakování, které se objevuje na přehrávačích videí.",
+    "dangerZone": "Nebezpečná zóna",
+    "resetToDefaults": "Obnovit výchozí",
+    "resetToDefaultsConfirm": "Obnovit všechna nastavení na výchozí?",
+    "resetToDefaultsToast": "Nastavení obnoveno na výchozí",
+    "saveSettings": "Uložit nastavení",
+    "settingsSavedToast": "Nastavení uloženo"
+  },
+  "navigation": {
+    "back": "Zpět",
+    "stats": "Statistiky",
+    "settings": "Nastavení"
+  }
+}
