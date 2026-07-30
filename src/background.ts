@@ -87,7 +87,11 @@ async function handleDiscovery(
     if (!tmdbId && data.title && data.title.length > 2) {
       const type = data.isTV ? "tv" : "movie"
       const res = await fetch(
-        `https://api.themoviedb.org/3/search/${type}?query=${encodeURIComponent(data.title)}`,
+        // include_adult: TMDB hides adult-flagged entries by default, which
+        // silently drops legitimate titles the user is actually watching
+        // (e.g. "Party Shore Slovensko"). We match against a known title
+        // rather than browsing, so the results stay scoped to that title.
+        `https://api.themoviedb.org/3/search/${type}?include_adult=true&query=${encodeURIComponent(data.title)}`,
         { headers: tmdbHeaders }
       )
 
