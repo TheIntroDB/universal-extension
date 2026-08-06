@@ -9,10 +9,120 @@ import {
 
 const ONEPLAY_URL = /^https?:\/\/(www\.)?oneplay\.(cz|sk)\//i
 
-// Written by the MAIN-world bridge (src/contents/oneplay-bridge.ts). Oneplay
-// keeps the player state in window.__NUXT__, which this isolated content script
-// cannot read directly.
+// ---------------------------------------------------------------------------
+// MAIN-world bridge
+// ---------------------------------------------------------------------------
+// Oneplay keeps everything we need (title, season, episode, content type) in
+// window.__NUXT__, which is page-world state an isolated content script cannot
+// read. It is exposed nowhere else: no JSON-LD on content pages, og:title is
+// the same generic string everywhere, and the player page body text carries no
+// season. So we inject bridgeMain() into the page as a <script> tag — that
+// runs in the MAIN world, reads the Pinia player store, and mirrors a minimal
+// snapshot onto the root data attribute read below.
+// ---------------------------------------------------------------------------
 const BRIDGE_ATTR = "data-introdb-oneplay"
+
+// Runs in the page (MAIN) world after injection, so it must be fully
+// self-contained — it can reference nothing from this module's scope.
+function bridgeMain(): void {
+  const BRIDGE_ATTR = "data-introdb-oneplay"
+  const POLL_MS = 1000
+
+  const asRecord = (value: unknown): Record<string, unknown> | null => {
+    return value && typeof value === "object"
+      ? (value as Record<string, unknown>)
+      : null
+  }
+
+  const asString = (value: unknown): string | null => {
+    return typeof value === "string" && value.trim() ? value.trim() : null
+  }
+
+  const readSnapshot = (): Record<string, unknown> | null => {
+    const nuxt = asRecord(
+      (window as unknown as Record<string, unknown>).__NUXT__
+    )
+    const pinia = asRecord(nuxt?.pinia)
+    const player = asRecord(pinia?.player)
+    const rawData = asRecord(player?.rawData)
+    const playerControl = asRecord(rawData?.playerControl)
+    if (!playerControl) return null
+
+    const overlay = asRecord(playerControl.contentOverlay)
+    const meta = asRecord(playerControl.meta)
+    const tracking = asRecord(playerControl.tracking)
+    const contentData = asRecord(tracking?.contentData)
+    const parent = asRecord(contentData?.parent)
+
+    const season = contentData?.season
+    const episodeNumber = contentData?.episodeNumber
+
+    return {
+      v: 1,
+      href: location.href,
+      contentType: asString(meta?.contentType),
+      overlayTitle: asString(overlay?.title),
+      overlaySubTitle: asString(overlay?.subTitle),
+      contentId: asString(contentData?.id),
+      contentTitle: asString(contentData?.title),
+      contentTypeRaw: asString(contentData?.type),
+      season:
+        typeof season === "string" || typeof season === "number"
+          ? season
+          : null,
+      episodeNumber:
+        typeof episodeNumber === "string" || typeof episodeNumber === "number"
+          ? episodeNumber
+          : null,
+      parentTitle: asString(parent?.title)
+    }
+  }
+
+  const publish = (): void => {
+    try {
+      const root = document.documentElement
+      if (!root) return
+
+      const snapshot = readSnapshot()
+      if (!snapshot) {
+        root.removeAttribute(BRIDGE_ATTR)
+        return
+      }
+
+      const serialised = JSON.stringify(snapshot)
+      // Only touch the DOM when something changed — the isolated script polls
+      // this attribute and the page runs its own MutationObservers.
+      if (root.getAttribute(BRIDGE_ATTR) !== serialised) {
+        root.setAttribute(BRIDGE_ATTR, serialised)
+      }
+    } catch {
+      // Never let a page-state change break the host page.
+    }
+  }
+
+  publish()
+  setInterval(publish, POLL_MS)
+}
+
+let bridgeInjected = false
+
+function injectBridge(): void {
+  if (bridgeInjected) return
+  bridgeInjected = true
+
+  const script = document.createElement("script")
+  script.textContent = `(${bridgeMain.toString()})()`
+  ;(document.head || document.documentElement).appendChild(script)
+  script.remove()
+}
+
+// Inject as soon as the module loads — imports run before the content script's
+// own init(), so the snapshot is already on the attribute by the first
+// extraction. Gated on the hostname so the <script> tag is never added on
+// other sites.
+if (ONEPLAY_URL.test(window.location.href)) {
+  injectBridge()
+}
 
 // og:title is the same marketing string on every Oneplay page, and the player
 // page briefly titles itself "Přehrávač" before the show name lands. Neither is
