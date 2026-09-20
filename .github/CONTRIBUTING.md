@@ -1,6 +1,6 @@
-# Contributing to The Intro Database Universal Extension
+# Contributing to TheIntroDB Universal Extension
 
-First of all, thank you for your interest in contributing to The Intro Database Universal Extension! We appreciate your help in making this project better.
+First of all, thank you for your interest in contributing to TheIntroDB Universal Extension! We appreciate your help in making this project better.
 
 ## Getting Started
 

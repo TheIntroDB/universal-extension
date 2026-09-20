@@ -1,4 +1,4 @@
-# The Intro Database Universal Extension
+# TheIntroDB Universal Extension
 
 A browser extension that adds skip buttons for **intros**, **recaps**, **credits**, and **previews** on almost any site!
 
