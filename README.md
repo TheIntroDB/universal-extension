@@ -64,7 +64,7 @@ These sites have dedicated extractors for the best experience:
 - The debug log is hidden by default and only appears inside the popup UI when enabled.
 
 **Environment (optional)**  
-Copy `.env.example` to `.env` to set `PLASMO_PUBLIC_TMDB_TOKEN` (for title → TMDB ID lookup) and/or `PLASMO_PUBLIC_INTRODB_API` (default: `https://api.theintrodb.org/v1`). Only `PLASMO_PUBLIC_*` variables are injected.
+Copy `.env.example` to `.env` to set `PLASMO_PUBLIC_TMDB_TOKEN` (for title → TMDB ID lookup) and/or `PLASMO_PUBLIC_INTRODB_API` (default: `https://api.theintrodb.org/v4`). Only `PLASMO_PUBLIC_*` variables are injected.
 
 ---
 
