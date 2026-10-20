@@ -1,0 +1,29 @@
+name: '📝 Update Release Draft'
+
+# Keeps a draft GitHub Release up to date with the PRs merged into main, using
+# .github/release-drafter.yml. Publishing the draft tags the version the store
+# build is cut from and gives the manual-install zip on the Releases page notes.
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      # Version bumps land in this file; ignoring it keeps a bump from
+      # immediately re-triggering an empty draft.
+      - package.json
+      - '**/*.md'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  update_release_draft:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update Draft
+        uses: release-drafter/release-drafter@34d80673e067bdc0c24568d3af899c216adcfaa9 # v7.7.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,63 @@
+# Release Drafter configuration — https://github.com/release-drafter/release-drafter
+#
+# The draft tag is the version the extension is released under: the store build
+# (submit.yml) packages package.json, whose version is bumped to match the tag.
+
+tag-prefix: v
+version-template: '$MAJOR.$MINOR.$PATCH'
+name-template: 'v$RESOLVED_VERSION'
+tag-template: 'v$RESOLVED_VERSION'
+category-template: '### $TITLE'
+
+categories:
+  - title: ':boom: Breaking changes'
+    semver-increment: major
+    when:
+      conventional:
+        breaking: true
+
+  - title: ':tada: New features'
+    semver-increment: minor
+    when:
+      conventional:
+        type: feat
+
+  - title: ':bug: Bug fixes'
+    when:
+      - conventional:
+          type: fix
+      - labels:
+          - bug
+
+  - title: ':zap: Performance and refactors'
+    when:
+      conventional:
+        types:
+          - perf
+          - refactor
+
+  - title: ':memo: Documentation'
+    when:
+      - conventional:
+          type: docs
+      - labels:
+          - documentation
+
+  - title: ':gear: Maintenance'
+    when:
+      conventional:
+        types:
+          - chore
+          - build
+          - ci
+          - test
+          - style
+          - revert
+
+  # Catch-all: an empty `when` collects the changes no category above matched.
+  - title: ':package: Other changes'
+
+template: |
+  ## What's New
+
+  $CHANGES
