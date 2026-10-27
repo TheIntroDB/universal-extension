@@ -6,7 +6,7 @@ import {
 } from "~/shared/media"
 
 import { INTRODB_API_URL } from "./shared/config"
-import { rateLimitFrom, type RateLimitKind } from "./shared/rateLimit"
+import { rateLimitFrom, type RateLimitKind, type RateLimitScope } from "./shared/rateLimit"
 
 export {}
 
@@ -40,6 +40,8 @@ interface DiscoveryResult {
   preview?: Segment[]
   /** "rate" means retry shortly; "usage" means the day's budget is gone. */
   kind?: RateLimitKind
+  /** "title" means one media target's budget; "account" means the caller's. */
+  scope?: RateLimitScope
   /** Seconds to wait, 1..86400 — always present on a 429. */
   reset?: number
 }
@@ -192,8 +194,8 @@ async function handleDiscovery(
         // branch used to return no wait at all. See the shared contract in
         // TheIntroDB/.github docs/rate-limit-contract.md.
         const body = await introRes.json().catch(() => null)
-        const { kind, reset } = rateLimitFrom(introRes.headers, body)
-        return { status: "rate_limited", kind, reset }
+        const { kind, reset, scope } = rateLimitFrom(introRes.headers, body)
+        return { status: "rate_limited", kind, reset, scope }
       }
       return {
         status: "no_data",

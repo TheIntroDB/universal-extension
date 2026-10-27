@@ -12,7 +12,7 @@ import {
   type SegmentType,
   type TrackableSegmentType
 } from "~/shared/media"
-import type { RateLimitKind } from "~/shared/rateLimit"
+import type { RateLimitKind, RateLimitScope } from "~/shared/rateLimit"
 import { extractMediaContext } from "~/websites"
 import type { MediaContext } from "~/websites"
 
@@ -33,6 +33,8 @@ interface IntroResponse {
   preview?: Segment[]
   /** "rate" means retry shortly; "usage" means the day's budget is gone. */
   kind?: RateLimitKind
+  /** "title" means one media target's budget; "account" means the caller's. */
+  scope?: RateLimitScope
   reset?: number
 }
 
@@ -70,6 +72,10 @@ interface ContentRuntimeState {
   activeMediaKey: string | null
   inFlightMediaKey: string | null
   suppressUntilMs: number
+  /** "all" covers every lookup; "title" covers one media target only. */
+  suppressScope: "all" | "title"
+  /** The target a "title" hold was recorded against. */
+  suppressMediaKey: string | null
 }
 
 const MAX_RETRIES = 3
@@ -104,15 +110,28 @@ const state: ContentRuntimeState = {
   lastLookupKey: null,
   activeMediaKey: null,
   inFlightMediaKey: null,
-  suppressUntilMs: 0
+  suppressUntilMs: 0,
+  suppressScope: "all",
+  suppressMediaKey: null
 }
 
 function isSuppressed() {
-  return Date.now() < state.suppressUntilMs
+  if (Date.now() >= state.suppressUntilMs) return false
+  // A per-title limit is spent for the title that spent it, so a hold recorded
+  // against another title does not cover this one.
+  return state.suppressScope === "all" || state.suppressMediaKey === state.activeMediaKey
 }
 
 function suppressLookups(durationMs: number) {
   state.suppressUntilMs = Date.now() + durationMs
+  state.suppressScope = "all"
+  state.suppressMediaKey = null
+}
+
+function suppressLookupsForTitle(mediaKey: string, durationMs: number) {
+  state.suppressUntilMs = Date.now() + durationMs
+  state.suppressScope = "title"
+  state.suppressMediaKey = mediaKey
 }
 
 function hasVideoElement() {
@@ -532,7 +551,14 @@ async function init() {
       // clears in ~10s, so a minute is dead time; a spent daily budget clears in
       // hours, so a minute means waking up to be refused again all evening.
       // `reset` is already clamped to 1..86400 by shared/rateLimit.
-      suppressLookups((res.reset ?? 60) * 1000)
+      const waitMs = (res.reset ?? 60) * 1000
+      // A per-title limit is spent for one media target, so hold that title
+      // rather than every lookup on the page until its reset.
+      if (res.scope === "title" && state.activeMediaKey) {
+        suppressLookupsForTitle(state.activeMediaKey, waitMs)
+      } else {
+        suppressLookups(waitMs)
+      }
       chrome.storage.local.set({
         [STORAGE_KEYS.error]: {
           type: "rate_limited",

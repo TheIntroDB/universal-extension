@@ -19,10 +19,18 @@
  */
 export type RateLimitKind = "rate" | "usage"
 
+/**
+ * "title" means the budget for one media target is spent
+ * (`specific_media_usage_limit_exceeded`); "account" means the caller's own.
+ * A per-title limit must not stop lookups for other titles.
+ */
+export type RateLimitScope = "title" | "account"
+
 export interface RateLimit {
   kind: RateLimitKind
   /** Seconds to wait, always usable: 1..86400. */
   reset: number
+  scope: RateLimitScope
 }
 
 /** A daily budget resets at UTC midnight, so nothing is worth waiting longer
@@ -122,5 +130,10 @@ export function rateLimitFrom(
         ? "usage"
         : "rate"
 
-  return { kind, reset }
+  // Only the per-title code is spent for one target; anything else -- including
+  // a duration-only guess -- is the caller's own budget.
+  const scope: RateLimitScope =
+    code === "specific_media_usage_limit_exceeded" ? "title" : "account"
+
+  return { kind, reset, scope }
 }
