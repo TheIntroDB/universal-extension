@@ -6,6 +6,7 @@ import {
 } from "~/shared/media"
 
 import { INTRODB_API_URL } from "./shared/config"
+import { rateLimitFrom, type RateLimitKind } from "./shared/rateLimit"
 
 export {}
 
@@ -37,6 +38,9 @@ interface DiscoveryResult {
   recap?: Segment[]
   credits?: Segment[]
   preview?: Segment[]
+  /** "rate" means retry shortly; "usage" means the day's budget is gone. */
+  kind?: RateLimitKind
+  /** Seconds to wait, 1..86400 — always present on a 429. */
   reset?: number
 }
 
@@ -182,13 +186,14 @@ async function handleDiscovery(
 
     if (!introRes.ok) {
       if (introRes.status === 429) {
-        const reset =
-          introRes.headers.get("X-RateLimit-Reset") ||
-          introRes.headers.get("X-UsageLimit-Reset")
-        return {
-          status: "rate_limited",
-          reset: reset ? parseInt(reset, 10) : undefined
-        }
+        // Read the wait off the response rather than guessing it from the
+        // X-*-Reset headers: a burst 429 carries neither of them
+        // (TheIntroDB/theintrodb-api#42), so reading those first is how this
+        // branch used to return no wait at all. See the shared contract in
+        // TheIntroDB/.github docs/rate-limit-contract.md.
+        const body = await introRes.json().catch(() => null)
+        const { kind, reset } = rateLimitFrom(introRes.headers, body)
+        return { status: "rate_limited", kind, reset }
       }
       return {
         status: "no_data",

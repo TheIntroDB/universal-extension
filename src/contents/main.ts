@@ -12,6 +12,7 @@ import {
   type SegmentType,
   type TrackableSegmentType
 } from "~/shared/media"
+import type { RateLimitKind } from "~/shared/rateLimit"
 import { extractMediaContext } from "~/websites"
 import type { MediaContext } from "~/websites"
 
@@ -30,6 +31,8 @@ interface IntroResponse {
   recap?: Segment[]
   credits?: Segment[]
   preview?: Segment[]
+  /** "rate" means retry shortly; "usage" means the day's budget is gone. */
+  kind?: RateLimitKind
   reset?: number
 }
 
@@ -525,10 +528,15 @@ async function init() {
       state.suppressUntilMs = 0
       monitorPlayback()
     } else if (res?.status === "rate_limited") {
-      suppressLookups(LONG_SUPPRESSION_MS)
+      // Wait as long as the API asked rather than a flat minute. A burst 429
+      // clears in ~10s, so a minute is dead time; a spent daily budget clears in
+      // hours, so a minute means waking up to be refused again all evening.
+      // `reset` is already clamped to 1..86400 by shared/rateLimit.
+      suppressLookups((res.reset ?? 60) * 1000)
       chrome.storage.local.set({
         [STORAGE_KEYS.error]: {
           type: "rate_limited",
+          kind: res.kind,
           reset: res.reset,
           time: Date.now()
         }
