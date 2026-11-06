@@ -1,4 +1,4 @@
-<img align="right" width="184" src="https://raw.githubusercontent.com/TheIntroDB/theintrodb-assets/main/integrations/chrome-firefox.png" alt="Chrome and Firefox">
+<img align="right" width="184" src="https://raw.githubusercontent.com/TheIntroDB/.github/main/integrations/chrome-firefox.png" alt="Chrome and Firefox">
 
 [![Chrome & Firefox MV3](https://img.shields.io/badge/Chrome%20%26%20Firefox-MV3-4285F4?style=flat-square&logo=googlechrome&logoColor=4ade80&labelColor=0d0d0d)](https://theintrodb.org)
 [![License](https://img.shields.io/github/license/TheIntroDB/universal-extension?style=flat-square&logo=gnu&logoColor=4ade80&label=License&labelColor=0d0d0d&color=038939)](https://github.com/TheIntroDB/universal-extension/blob/main/LICENSE)
