@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (C) 2026 TheIntroDB
+
 export function formatTime(seconds: number) {
   const totalSeconds = Math.max(0, Math.floor(seconds))
   const h = Math.floor(totalSeconds / 3600)

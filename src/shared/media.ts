@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (C) 2026 TheIntroDB
+
 export const SEGMENT_TYPES = ["intro", "recap", "credits", "preview"] as const
 
 export const TRACKED_SEGMENT_TYPES = ["intro", "recap", "credits"] as const

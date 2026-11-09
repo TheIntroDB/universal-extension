@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (C) 2026 TheIntroDB
+
 import type { PlasmoCSConfig } from "plasmo"
 
 import i18next from "~/i18n/config"
