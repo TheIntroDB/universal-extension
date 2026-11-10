@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (C) 2026 TheIntroDB
+
 export function ErrorDisplay({ message }: { message: string | null }) {
   if (!message) return null
 

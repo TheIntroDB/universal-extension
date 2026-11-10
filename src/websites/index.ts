@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (C) 2026 TheIntroDB
+
 import { extractAppleTV, matchAppleTV } from "./AppleTV"
 import { extractCrunchyroll, matchCrunchyroll } from "./Crunchyroll"
 import { extractDisneyPlus, matchDisneyPlus } from "./DisneyPlus"

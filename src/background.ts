@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (C) 2026 TheIntroDB
+
 import { initAnonymousUsageReporting } from "~/background/analytics"
 import {
   END_OF_VIDEO_SENTINEL_MS,

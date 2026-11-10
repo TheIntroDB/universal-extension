@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (C) 2026 TheIntroDB
+
 import js from "@eslint/js"
 import prettier from "eslint-config-prettier"
 import react from "eslint-plugin-react"

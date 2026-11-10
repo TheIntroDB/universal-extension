@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (C) 2026 TheIntroDB
+
 export const ANALYTICS_STORAGE_KEY = "anonymous_usage_reporting"
 
 export type AnalyticsEventProps = Record<string, string | number>

@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (C) 2026 TheIntroDB
+
 import { useTranslation } from "react-i18next"
 
 import { SEGMENT_TYPES, type SegmentType } from "~/shared/media"
